@@ -1,23 +1,16 @@
 import React from 'react';
 import ListItem from './list_item';
 
-const VideoList = (props) => {
+const ItemList = (props) => {
 
   // stay away from for loops but use built-in iterator: <array>.map( function(item) ..) 
-  var items = props.videos.map( (video) => {   // map returns an array with the results!
-   
-    // temp  'translating' video info to generic 'item' info to feed into reusable list_item 
-    let item = video;
-    item.key = video.etag;
-    item.title = video.snippet.title;
-    item.thumbURL = video.snippet.thumbnails.default.url;
-    
-      
+  var items = props.items.map( (item, index) => {   // map returns an array with the results!
+       
     return (
       <ListItem 
-        key={item.key}
+        key={index}
         item={item} 
-        onItemSelect={props.onVideoSelect} />
+        onItemSelect={props.onItemSelect} />
       //  REMEMBER:  key is something React needs to uniquely identify each list item (could be  
       // populated with anything that results in a unique id) 
     )
@@ -31,4 +24,4 @@ const VideoList = (props) => {
   )
 }
 
-export default VideoList;
+export default ItemList;

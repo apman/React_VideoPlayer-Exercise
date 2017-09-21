@@ -7,7 +7,7 @@ import YTSearch from 'youtube-api-search';
 
 // packages installed with npm don't need the full path, but file you write yourself do
 import SearchBar from './components/search_bar';  
-import VideoList from './components/video_list';
+import ItemList from './components/item_list';
 import Player from './components/player';
 
 /*  REMEMBER:  React is a libray that compiles components/views written in JS/JSX into JS that will 
@@ -31,19 +31,7 @@ const API_KEY = 'AIzaSyDQAGI54c-uQERMhWI-qTRWSRPz4_pQNG0';
 // the one fetching it 
 
 
-//  REMEMBER:  "function-based Components", not a class, no state
-// ES6: "() => { ..." equivalent to "function() { ..." (except for scope of 'this')  ??? 
-/*
-const App = () => {  
-    return (
-        <div>
-          <SearchBar />
-        </div>   // returns some jsx (gets compiled into JS function createElement("div", null, "Hi!") ))
-    );
-} 
-*/
-
-// Same component as class-based (using state to save search results)
+// Class-based component (using state to save search results)
 class App extends Component {
     constructor(props) {
         super(props);
@@ -59,9 +47,19 @@ class App extends Component {
         YTSearch({key: API_KEY, term: searchTerm}, (videos) => {
             console.log("videoSearch with: " + searchTerm);   //  TEMP 
             console.log(videos);   //  TEMP 
+
+            const items = videos.map( (video, index) => {   // map returns an array with the results!
+    
+                // 'translating' YouTube video info to generic 'item' info to feed into reusable list_item 
+                const item = video;
+                item.title = video.snippet.title;
+                item.thumbURL = video.snippet.thumbnails.default.url;
+                return(item);
+            });
+            
             this.setState({ 
-                videos : videos, 
-                selectedVideo : videos[0]
+                videos : items, 
+                selectedVideo : items[0]
             });
         });     
     }
@@ -71,16 +69,16 @@ class App extends Component {
             <div>
                 <SearchBar onSearchTermChange={searchTerm => this.videoSearch(searchTerm)} />
                 <Player video={this.state.selectedVideo} />  
-                <VideoList 
-                    onVideoSelect={selectedVideo => this.setState({selectedVideo}) }
-                    videos={this.state.videos} /> 
+                <ItemList 
+                    onItemSelect={selectedVideo => this.setState({selectedVideo}) }
+                    items={this.state.videos} /> 
             </div>
             //   REMEMBER:  ES6 short form for single props item where key and value have the same name:
             //     {selectedVideo} instead of { selectedVideo : selectedVideo }
                               
-            // ^ VideoList: we pass in a function that can update the app's state, 
+            // ^ ItemList: we pass in a function that can update the app's state, 
             //          and a property 'videos' which can be accessed as props.videos from inside 
-            //  TODO:  make the videoList re-usable (cp. Utkarsh ...)
+            //  TODO:  make the ItemList re-usable (cp. Utkarsh ...)
         );
     }
 }
