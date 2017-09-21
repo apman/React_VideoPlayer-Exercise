@@ -20,8 +20,8 @@ const Player = ({video}) => {    // {} to immediately expose props.video as var 
         <iframe src={url}></iframe>
       </div>
       <div>
-        <div>{video.snippet.title}</div>
-        <div>{video.snippet.description}</div>
+        <div>{video.title}</div>
+        <div>{video.description}</div>
       </div>
     </div>
   )
