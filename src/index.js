@@ -6,9 +6,9 @@ import ReactDOM from 'react-dom' // responsible for adding components to DOM
 import YTSearch from 'youtube-api-search';
 
 // packages installed with npm don't need the full path, but file you write yourself do
-import SearchBar from './components/search_bar';  
-import ItemList from './components/item_list';
-import Player from './components/player';
+import SearchBar from './components/SearchBar';  
+import ItemList from './components/ItemList';
+import Player from './components/Player';
 
 /*  REMEMBER:  React is a libray that compiles components/views written in JS/JSX into JS that will 
    then be rendered in the Browser
@@ -20,7 +20,8 @@ and install the YouTube search api package:
 
         $ npm install --save youtube-api-search
 
-(the --save bit writes the package to the dependencies in package.json, so the app knows to download 
+(the --s
+    ave bit writes the package to the dependencies in package.json, so the app knows to download 
 it if it's missing from the node_modules folder) (see Udemi course: section 1, lecture 13 )
 */
 
@@ -45,7 +46,7 @@ class App extends Component {
     
     videoSearch(searchTerm) {
         YTSearch({key: API_KEY, term: searchTerm}, (videos) => {
-            console.log("videoSearch with: " + searchTerm);   //  TEMP 
+            console.log(`videoSearch with: ${searchTerm}`);   //  TEMP 
             console.log(videos);   //  TEMP 
 
             const items = videos.map( (video, index) => {   // map returns an array with the results!
@@ -54,7 +55,7 @@ class App extends Component {
                 const item = video;
                 item.title = video.snippet.title;
                 item.thumbURL = video.snippet.thumbnails.default.url;
-                return(item);
+                return item;
             });
             
             this.setState({ 

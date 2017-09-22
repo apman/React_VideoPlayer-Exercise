@@ -13,6 +13,7 @@ const Player = ({video}) => {    // {} to immediately expose props.video as var 
   const videoId = video.id.videoId;
   // const url = 'https://www.youtube.com/embed/' + videoId;
   const url = `https://www.youtube.com/embed/${videoId}`;  // ES6 equiv of ^   REMEMBER  
+  const {title, description} = video;  // short for {title: title, description: description}
 
   return (
     <div>
@@ -20,8 +21,8 @@ const Player = ({video}) => {    // {} to immediately expose props.video as var 
         <iframe src={url}></iframe>
       </div>
       <div>
-        <div>{video.title}</div>
-        <div>{video.description}</div>
+        <div>{title}</div>
+        <div>{description}</div>
       </div>
     </div>
   )
