@@ -40,6 +40,10 @@ class App extends Component {
             videos : [], 
             selectedVideo : null 
         };
+        
+        this.selectVideo = this.selectVideo.bind(this); 
+        //  REMEMBER:   Binding 'this' to the method here makes sure that each time 
+        // it is called, the context of the current App instance is available to it
 
         this.videoSearch('mountain goats');
     }
@@ -49,15 +53,15 @@ class App extends Component {
             console.log(`videoSearch with: ${searchTerm}`);   //  TEMP 
             console.log(videos);   //  TEMP 
 
-            const items = videos.map( (video, index) => {   // map returns an array with the results!
-    
+            const items = videos.map( (video) => {   // map returns an array with the results!
+                
                 // 'translating' YouTube video info to generic 'item' info to feed into reusable list_item 
-                const item = video;
-                item.title = video.snippet.title;
-                item.thumbURL = video.snippet.thumbnails.default.url;
-                return item;
+                video.title = video.snippet.title;
+                video.thumbURL = video.snippet.thumbnails.default.url;
+                return video;
             });
             
+                                                
             this.setState({ 
                 videos : items, 
                 selectedVideo : items[0]
@@ -65,21 +69,26 @@ class App extends Component {
         });     
     }
 
+    selectVideo(selectedVideo) {
+        this.setState({selectedVideo});  //
+    }
+
     render() {
         return (
             <div>
                 <SearchBar onSearchTermChange={searchTerm => this.videoSearch(searchTerm)} />
-                <Player video={this.state.selectedVideo} />  
+                <Player video={this.state.selectedVideo} /> 
                 <ItemList 
-                    onItemSelect={selectedVideo => this.setState({selectedVideo}) }
+                    /* onItemSelect={selectedVideo => this.setState({selectedVideo})} */
+                    /* onItemSelect={this.selectVideo.bind(this)} */
+                    onItemSelect={this.selectVideo}  // binding 'this' now happens in the constructor!
                     items={this.state.videos} /> 
             </div>
             //   REMEMBER:  ES6 short form for single props item where key and value have the same name:
             //     {selectedVideo} instead of { selectedVideo : selectedVideo }
                               
             // ^ ItemList: we pass in a function that can update the app's state, 
-            //          and a property 'videos' which can be accessed as props.videos from inside 
-            //  TODO:  make the ItemList re-usable (cp. Utkarsh ...)
+            //          and a property 'items' which can be accessed as props.items from inside 
         );
     }
 }
