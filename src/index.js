@@ -6,9 +6,9 @@ import ReactDOM from 'react-dom' // responsible for adding components to DOM
 import YTSearch from 'youtube-api-search';
 
 // packages installed with npm don't need the full path, but file you write yourself do
-import SearchBar from './components/search_bar';  
-import VideoList from './components/video_list';
-import Player from './components/player';
+import SearchBar from './components/SearchBar';  
+import ItemList from './components/ItemList';
+import Player from './components/Player';
 
 /*  REMEMBER:  React is a libray that compiles components/views written in JS/JSX into JS that will 
    then be rendered in the Browser
@@ -31,19 +31,7 @@ const API_KEY = 'AIzaSyDQAGI54c-uQERMhWI-qTRWSRPz4_pQNG0';
 // the one fetching it 
 
 
-//  REMEMBER:  "function-based Components", not a class, no state
-// ES6: "() => { ..." equivalent to "function() { ..." (except for scope of 'this')  ??? 
-/*
-const App = () => {  
-    return (
-        <div>
-          <SearchBar />
-        </div>   // returns some jsx (gets compiled into JS function createElement("div", null, "Hi!") ))
-    );
-} 
-*/
-
-// Same component as class-based (using state to save search results)
+// Class-based component (using state to save search results)
 class App extends Component {
     constructor(props) {
         super(props);
@@ -51,36 +39,55 @@ class App extends Component {
             videos : [], 
             selectedVideo : null 
         };
+        
+        this.selectVideo = this.selectVideo.bind(this); 
+        //  REMEMBER:   Binding 'this' to the method here makes sure that each time 
+        // it is called, the context of the current App instance is available to it
 
         this.videoSearch('mountain goats');
     }
     
     videoSearch(searchTerm) {
         YTSearch({key: API_KEY, term: searchTerm}, (videos) => {
-            console.log("videoSearch with: " + searchTerm);   //  TEMP 
+            console.log(`videoSearch with: ${searchTerm}`);   //  TEMP 
             console.log(videos);   //  TEMP 
+
+            const items = videos.map( (video) => ({   // map returns an array with the results! |   () => expr;  returns expr
+                
+                // 'translating' YouTube video info to generic 'item' info to feed into reusable list_item 
+                title : video.snippet.title,
+                thumbURL : video.snippet.thumbnails.default.url,
+                ...video    // <-- spread operator, adds all properties of the original video object to this new object 
+            }));
+            
+                                                
             this.setState({ 
-                videos : videos, 
-                selectedVideo : videos[0]
+                videos : items, 
+                selectedVideo : items[0]
             });
         });     
+    }
+
+    selectVideo(selectedVideo) {
+        this.setState({selectedVideo});  //
     }
 
     render() {
         return (
             <div>
                 <SearchBar onSearchTermChange={searchTerm => this.videoSearch(searchTerm)} />
-                <Player video={this.state.selectedVideo} />  
-                <VideoList 
-                    onVideoSelect={selectedVideo => this.setState({selectedVideo}) }
-                    videos={this.state.videos} /> 
+                <Player video={this.state.selectedVideo} /> 
+                <ItemList 
+                    /* onItemSelect={selectedVideo => this.setState({selectedVideo})} // <-- slow */
+                    /* onItemSelect={this.selectVideo.bind(this)} // <-- still slow */
+                    onItemSelect={this.selectVideo}  // binding 'this' now happens only *once* in the constructor!
+                    items={this.state.videos} /> 
             </div>
             //   REMEMBER:  ES6 short form for single props item where key and value have the same name:
             //     {selectedVideo} instead of { selectedVideo : selectedVideo }
                               
-            // ^ VideoList: we pass in a function that can update the app's state, 
-            //          and a property 'videos' which can be accessed as props.videos from inside 
-            //  TODO:  make the videoList re-usable (cp. Utkarsh ...)
+            // ^ ItemList: we pass in a function that can update the app's state, 
+            //          and a property 'items' which can be accessed as props.items from inside 
         );
     }
 }
