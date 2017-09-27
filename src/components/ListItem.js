@@ -2,9 +2,8 @@ import React from 'react';
 
 const ListItem = ({item, onItemSelect}) => {  
 
-  const thumbURL = item.thumbURL;    
-  const title = item.title;    
-  
+  const {thumbURL, title} = item;
+   
   const onItemClick = () => onItemSelect(item);
 
   return (

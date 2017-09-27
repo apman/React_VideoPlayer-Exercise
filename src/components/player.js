@@ -13,7 +13,7 @@ const Player = ({video}) => {    // {} to immediately expose props.video as var 
   const videoId = video.id.videoId;
   // const url = 'https://www.youtube.com/embed/' + videoId;
   const url = `https://www.youtube.com/embed/${videoId}`;  // ES6 equiv of ^   REMEMBER  
-  const {title, description} = video;  // short for {title: title, description: description}
+  const {title, description} = video.snippet;  // short for {title: title, description: description}
 
   return (
     <div>

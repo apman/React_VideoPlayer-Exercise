@@ -20,8 +20,7 @@ and install the YouTube search api package:
 
         $ npm install --save youtube-api-search
 
-(the --s
-    ave bit writes the package to the dependencies in package.json, so the app knows to download 
+(the --save bit writes the package to the dependencies in package.json, so the app knows to download 
 it if it's missing from the node_modules folder) (see Udemi course: section 1, lecture 13 )
 */
 
@@ -53,13 +52,13 @@ class App extends Component {
             console.log(`videoSearch with: ${searchTerm}`);   //  TEMP 
             console.log(videos);   //  TEMP 
 
-            const items = videos.map( (video) => {   // map returns an array with the results!
+            const items = videos.map( (video) => ({   // map returns an array with the results! |   () => expr;  returns expr
                 
                 // 'translating' YouTube video info to generic 'item' info to feed into reusable list_item 
-                video.title = video.snippet.title;
-                video.thumbURL = video.snippet.thumbnails.default.url;
-                return video;
-            });
+                title : video.snippet.title,
+                thumbURL : video.snippet.thumbnails.default.url,
+                ...video    // <-- spread operator, adds all properties of the original video object to this new object 
+            }));
             
                                                 
             this.setState({ 
@@ -79,9 +78,9 @@ class App extends Component {
                 <SearchBar onSearchTermChange={searchTerm => this.videoSearch(searchTerm)} />
                 <Player video={this.state.selectedVideo} /> 
                 <ItemList 
-                    /* onItemSelect={selectedVideo => this.setState({selectedVideo})} */
-                    /* onItemSelect={this.selectVideo.bind(this)} */
-                    onItemSelect={this.selectVideo}  // binding 'this' now happens in the constructor!
+                    /* onItemSelect={selectedVideo => this.setState({selectedVideo})} // <-- slow */
+                    /* onItemSelect={this.selectVideo.bind(this)} // <-- still slow */
+                    onItemSelect={this.selectVideo}  // binding 'this' now happens only *once* in the constructor!
                     items={this.state.videos} /> 
             </div>
             //   REMEMBER:  ES6 short form for single props item where key and value have the same name:
