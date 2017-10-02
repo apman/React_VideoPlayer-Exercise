@@ -26,10 +26,11 @@
     "webpack-dev-server": "^2.8.2"
   },
   "dependencies": {
+    "@shopify/polaris": "^1.6.0",
     "babel-preset-stage-1": "^6.1.18",
     "lodash": "^3.10.1",
-    "react": "^0.14.3",
-    "react-dom": "^0.14.3",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
     "react-redux": "4.3.0",
     "react-router": "^2.0.1",
     "redux": "^3.0.4",
