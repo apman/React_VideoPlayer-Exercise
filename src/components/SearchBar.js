@@ -1,4 +1,5 @@
 import React, { Component } from 'react';  
+import {TextField} from '@shopify/Polaris';
 //  REMEMBER:  the addition of { Component } is equivalent to having another line: 
 //    const Component = React.Component
 // (allows us to reference Component directly everywhere (similar technique works with props))
@@ -17,11 +18,20 @@ class SearchBar extends Component {
     render() {
         return (
             <div>
-                <input 
+
+                <TextField
+                    label="Search"
+                    placeholder="Hit 'Enter' when you're done ...  (and yes, I know that's not exactly best UX practice)"
                     value = {this.state.userInput}
                     onChange={event => this.onInputChange(event)}  
                     onKeyPress={event => this.onKeyPressed(event)}
                 />
+
+                {/* <input 
+                    value = {this.state.userInput}
+                    onChange={event => this.onInputChange(event)}  
+                    onKeyPress={event => this.onKeyPressed(event)}
+                /> */}
                 { /*  REMEMBER: 
                     - you can drop the parenthesis of an arrow function if there is only one argument, 
                         i.e. event 
@@ -33,14 +43,12 @@ class SearchBar extends Component {
                       value) makes it a "controled component" and allows us to potentially add other 
                       stuff than just what the user types (like auto-complete suggestions) */ 
                 }
-                <br />Value of input: {this.state.userInput}
             </div>
         );
     }
 
-    onInputChange(event) {
-        
-        const userInput = event.target.value;
+    onInputChange(input) {
+        const userInput = input;
         this.setState({userInput});
     } 
     
